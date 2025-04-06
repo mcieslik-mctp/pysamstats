@@ -3,11 +3,11 @@ from __future__ import absolute_import, print_function, division
 import logging
 import sys
 from math import sqrt
+import math
 
 
 import numpy as np
 from numpy import around as round
-from nose.tools import eq_, assert_almost_equal
 
 
 from pysam import Samfile, Fastafile
@@ -33,18 +33,21 @@ def compare_iterators(expected, actual):
         for k, v in e.items():
             try:
                 if isinstance(v, float):
-                    assert_almost_equal(v, a[k])
+                    # Replace assert_almost_equal(v, a[k])
+                    assert math.isclose(v, a[k], rel_tol=1e-07, abs_tol=0.0), f'{k=}, {v=}, {a[k]=}'
                 else:
-                    eq_(v, a[k])
-            except:
+                    # Replace eq_(v, a[k])
+                    assert v == a[k], f'{k=}, {v=}, {a[k]=}'
+            except AssertionError: # Keep the debugging output
                 debug('mismatch %r, expected %r, found %r' % (k, v, a[k]))
                 debug('expected: %r' % sorted(e.items()))
                 debug('actual: %r' % sorted(a.items()))
                 raise
         for k in a:  # check no unexpected fields
             try:
+                # Replace assert k in e
                 assert k in e
-            except:
+            except AssertionError: # Keep the debugging output
                 debug('missing %r' % k)
                 debug('expected: %r' % sorted(e.items()))
                 debug('actual: %r' % sorted(a.items()))

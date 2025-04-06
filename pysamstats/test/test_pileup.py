@@ -4,7 +4,7 @@ import logging
 import sys
 
 
-from nose.tools import eq_, assert_raises
+import unittest
 from pysam import Samfile, Fastafile
 import numpy as np
 from numpy import around as round
@@ -956,16 +956,16 @@ def test_pileup_truncate():
         else:
             a = f(Samfile('fixture/test.bam'), **kwargs_notrunc)
         debug(a[:5])
-        eq_(1952, a['pos'][0])
-        eq_(2154, a['pos'][-1])
+        assert 1952 == a['pos'][0]
+        assert 2154 == a['pos'][-1]
         # test truncate
         if needs_ref:
             a = f(Samfile('fixture/test.bam'), Fastafile('fixture/ref.fa'),
                   **kwargs_trunc)
         else:
             a = f(Samfile('fixture/test.bam'), **kwargs_trunc)
-        eq_(2000, a['pos'][0])
-        eq_(2099, a['pos'][-1])
+        assert 2000 == a['pos'][0]
+        assert 2099 == a['pos'][-1]
 
 
 def test_pileup_pad():
@@ -987,16 +987,16 @@ def test_pileup_pad():
                   **kwargs_nopad)
         else:
             a = f(Samfile('fixture/test.bam'), **kwargs_nopad)
-        eq_(924, a['pos'][0])
-        eq_(9935, a['pos'][-1])
+        assert 924 == a['pos'][0]
+        assert 9935 == a['pos'][-1]
         # test pad
         if needs_ref:
             a = f(Samfile('fixture/test.bam'), Fastafile('fixture/ref.fa'),
                   **kwargs_pad)
         else:
             a = f(Samfile('fixture/test.bam'), **kwargs_pad)
-        eq_(0, a['pos'][0])
-        eq_(19999, a['pos'][-1])
+        assert 0 == a['pos'][0]
+        assert 19999 == a['pos'][-1]
         assert np.all(np.diff(a['pos']) == 1)
 
 
@@ -1015,25 +1015,24 @@ def test_pileup_pad_wg():
                   **kwargs_nopad)
         else:
             a = f(Samfile('fixture/test.bam'), **kwargs_nopad)
-        eq_(sorted(set(a['chrom'])), [b'Pf3D7_01_v3', b'Pf3D7_02_v3'])
-        eq_(924, a[a['chrom'] == b'Pf3D7_01_v3']['pos'][0])
-        eq_(9935, a[a['chrom'] == b'Pf3D7_01_v3']['pos'][-1])
-        eq_(926, a[a['chrom'] == b'Pf3D7_02_v3']['pos'][0])
-        eq_(10074, a[a['chrom'] == b'Pf3D7_02_v3']['pos'][-1])
+        assert sorted(set(a['chrom'])) == [b'Pf3D7_01_v3', b'Pf3D7_02_v3']
+        assert 924 == a[a['chrom'] == b'Pf3D7_01_v3']['pos'][0]
+        assert 9935 == a[a['chrom'] == b'Pf3D7_01_v3']['pos'][-1]
+        assert 926 == a[a['chrom'] == b'Pf3D7_02_v3']['pos'][0]
+        assert 10074 == a[a['chrom'] == b'Pf3D7_02_v3']['pos'][-1]
         # test pad
         if needs_ref:
             a = f(Samfile('fixture/test.bam'), Fastafile('fixture/ref.fa'),
                   **kwargs_pad)
         else:
             a = f(Samfile('fixture/test.bam'), **kwargs_pad)
-        eq_(sorted(set(a['chrom'])),
-            [b'Pf3D7_01_v3', b'Pf3D7_02_v3', b'Pf3D7_03_v3'])
-        eq_(0, a[a['chrom'] == b'Pf3D7_01_v3']['pos'][0])
-        eq_(50000, a[a['chrom'] == b'Pf3D7_01_v3']['pos'][-1])
-        eq_(0, a[a['chrom'] == b'Pf3D7_02_v3']['pos'][0])
-        eq_(60000, a[a['chrom'] == b'Pf3D7_02_v3']['pos'][-1])
-        eq_(0, a[a['chrom'] == b'Pf3D7_03_v3']['pos'][0])
-        eq_(70000, a[a['chrom'] == b'Pf3D7_03_v3']['pos'][-1])
+        assert sorted(set(a['chrom'])) == [b'Pf3D7_01_v3', b'Pf3D7_02_v3', b'Pf3D7_03_v3']
+        assert 0 == a[a['chrom'] == b'Pf3D7_01_v3']['pos'][0]
+        assert 50000 == a[a['chrom'] == b'Pf3D7_01_v3']['pos'][-1]
+        assert 0 == a[a['chrom'] == b'Pf3D7_02_v3']['pos'][0]
+        assert 60000 == a[a['chrom'] == b'Pf3D7_02_v3']['pos'][-1]
+        assert 0 == a[a['chrom'] == b'Pf3D7_03_v3']['pos'][0]
+        assert 70000 == a[a['chrom'] == b'Pf3D7_03_v3']['pos'][-1]
 
 
 def test_pileup_limit():
@@ -1048,7 +1047,7 @@ def test_pileup_limit():
                   **kwargs)
         else:
             a = f(Samfile('fixture/deep.bam'), **kwargs)
-        eq_(26169, a[70])
+        assert 26169 == a[70]
 
         # test with specific limit
         kwargs = dict(fields=['reads_all'], max_depth=12000)
@@ -1057,7 +1056,7 @@ def test_pileup_limit():
                   **kwargs)
         else:
             a = f(Samfile('fixture/deep.bam'), **kwargs)
-        eq_(12046, a[70])  # no idea why limit is not exact
+        assert 12046 == a[70]  # no idea why limit is not exact
 
         # test with default limit
         kwargs = dict(fields=['reads_all'])
@@ -1066,7 +1065,7 @@ def test_pileup_limit():
                   **kwargs)
         else:
             a = f(Samfile('fixture/deep.bam'), **kwargs)
-        eq_(8052, a[70])  # no idea why limit is not exact
+        assert 8052 == a[70]  # no idea why limit is not exact
 
 
 def test_load_cov_long_contig_name():
@@ -1095,8 +1094,10 @@ def test_load_cov_using_steppers():
 
     for exp_all, exp_pp, step in zip(reads_all, reads_pp, steppers):
         a = pysamstats.load_coverage(Samfile(bampath), chrom=seq, stepper=step, pad=True)
-        eq_(exp_all, a[pos]["reads_all"])
-        eq_(exp_pp, a[pos]["reads_pp"])
+        assert exp_all == a[pos]["reads_all"]
+        assert exp_pp == a[pos]["reads_pp"]
 
-    with assert_raises(ValueError):
+        # Using unittest.TestCase().assertRaises for a functional test context
+    test_case = unittest.TestCase()
+    with test_case.assertRaises(ValueError):
         pysamstats.load_coverage(Samfile(bampath), chrom=seq, stepper="notastepper")
