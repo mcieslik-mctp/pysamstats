@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "wheel", "pysam (<0.16)"]
+requires = ["setuptools", "wheel", "cython", "pysam"]
 
 [tool.pysamstats]
 name='pysamstats'

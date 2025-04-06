@@ -1,16 +1,5 @@
 from setuptools import setup, Extension, find_packages
-
-
-# require pysam is pre-installed
-try:
-    import pysam
-except ImportError:
-    raise Exception('pysam not found; please install pysam first')
-from distutils.version import LooseVersion
-required_pysam_version = '0.15'
-if LooseVersion(pysam.__version__) < LooseVersion(required_pysam_version):
-    raise Exception('pysam version >= %s is required; found %s' %
-                    (required_pysam_version, pysam.__version__))
+import pysam
 
 
 def get_version():
@@ -54,10 +43,16 @@ setup(
     scripts=['scripts/pysamstats'],
     package_dir={'': '.'},
     install_requires=[
-        "pysam (<0.16)",
         "numpy",
+        "pysam",
     ],
     packages=find_packages(),
+    setup_requires=[
+        "nose2",
+    ],
+    tests_require=[
+        "nose2",
+    ],
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',

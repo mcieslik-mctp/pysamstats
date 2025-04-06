@@ -1,4 +1,6 @@
 *.py[co]
+.venv
+*.code-workspace
 
 # Packages
 *.egg
